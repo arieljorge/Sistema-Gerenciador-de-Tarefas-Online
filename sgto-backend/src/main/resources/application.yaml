@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: sgto-backend
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: admin
+    password: secure_password
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
