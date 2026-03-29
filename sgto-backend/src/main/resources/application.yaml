@@ -5,6 +5,29 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: admin
     password: secure_password
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    defer-datasource-initialization: true
+  mvc:
+    servlet:
+      path: /api
+    async:
+      request-timeout: 5000
+jwt:
+  secret: 3cc62db9-e8f9-4ec5-a369-3077dafd07c6
+  expiration-ms: 86400000
+server:
+  tomcat:
+    connection-timeout: 5s
+admin:
+  username: admin
+  email: admin@admin.com
+  senha: admin123
