@@ -16,6 +16,9 @@ spring:
     hibernate:
       ddl-auto: none
     defer-datasource-initialization: true
+    properties:
+      hibernate:
+        default_schema: public
   mvc:
     servlet:
       path: /api
@@ -31,3 +34,7 @@ admin:
   username: admin
   email: admin@admin.com
   senha: admin123
+logging:
+  level:
+    org.springframework.jdbc: debug
+    org.hibernate.sql: debug
