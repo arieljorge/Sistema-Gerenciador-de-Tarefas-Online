@@ -1,11 +1,14 @@
 package com.github.arieljorge.sgto.repository;
 
 import com.github.arieljorge.sgto.entity.Contribuicao;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface ContribuicaoRepository extends JpaRepository<Contribuicao, Short>, ContribuicaoCustomRepository {
 
@@ -18,4 +21,7 @@ public interface ContribuicaoRepository extends JpaRepository<Contribuicao, Shor
         Pageable pageable,
         @Param("plataforma_origem") String plataformaOrigem
     );
+
+    @Transactional
+    void deleteAllByIdIn(List<Short> contribuicaoIds);
 }

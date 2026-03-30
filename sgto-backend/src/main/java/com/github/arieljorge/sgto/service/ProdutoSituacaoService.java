@@ -9,4 +9,5 @@ public interface ProdutoSituacaoService {
     void upsertProdutoSituacoes(List<ProdutoSituacaoUpsertDto> produtoSituacaoUpsertDtos);
     PageResponseDto<ProdutoSituacaoOutDto> obterProdutoSituacoes(Pageable pageable, ProdutoSituacaoFilterDto produtoSituacaoFilterDto);
     ProdutoSituacaoOutDto obterProdutoSituacaoPorId(Short idProdutoSituacao);
+    void removerPorIds(List<Short> produtoSituacaoIds);
 }

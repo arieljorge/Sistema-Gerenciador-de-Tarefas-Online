@@ -18,9 +18,9 @@ public class EncadernacaoController {
     private final EncadernacaoService encadernacaoService;
 
     @PostMapping
-    public ResponseEntity<Void> upsertEncadernacoes(@Valid @RequestBody List<EncadernacaoUpsertDto> encadernacaoUpsertDtos) {
+    public ResponseEntity<ApiResponse<Void>> upsertEncadernacoes(@Valid @RequestBody List<EncadernacaoUpsertDto> encadernacaoUpsertDtos) {
         this.encadernacaoService.upsertEncadernacoes(encadernacaoUpsertDtos);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponse<>(true, "encadernações salvas com sucesso.", null));
     }
 
     @GetMapping
@@ -33,5 +33,11 @@ public class EncadernacaoController {
     public ResponseEntity<ApiResponse<EncadernacaoOutDto>> obterEncadernacao(@PathVariable("id") Short idEncadernacao) {
         final EncadernacaoOutDto response = this.encadernacaoService.obterEncadernacaoPorId(idEncadernacao);
         return ResponseEntity.ok(new ApiResponse<>(true, null, response));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<Void>> deletarEncadernacoes(@Valid @RequestBody List<Short> encadernacoesIds) {
+        this.encadernacaoService.removerPorIds(encadernacoesIds);
+        return ResponseEntity.ok(new ApiResponse<>(true, "encadernações deletadas com sucesso.", null));
     }
 }

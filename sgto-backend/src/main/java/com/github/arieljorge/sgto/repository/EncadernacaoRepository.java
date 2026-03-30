@@ -1,11 +1,14 @@
 package com.github.arieljorge.sgto.repository;
 
 import com.github.arieljorge.sgto.entity.Encadernacao;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface EncadernacaoRepository extends JpaRepository<Encadernacao, Short>, EncadernacaoCustomRepository {
 
@@ -18,4 +21,7 @@ public interface EncadernacaoRepository extends JpaRepository<Encadernacao, Shor
         Pageable pageable,
         @Param("plataforma_origem") String plataformaOrigem
     );
+
+    @Transactional
+    void removeAllByIdIn(List<Short> encadernacaoIds);
 }

@@ -5,6 +5,7 @@ import com.github.arieljorge.sgto.entity.ProdutoSituacao;
 import com.github.arieljorge.sgto.enumerator.PlataformaExterna;
 import com.github.arieljorge.sgto.repository.ProdutoSituacaoRepository;
 import com.github.arieljorge.sgto.service.ProdutoSituacaoService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ public class ProdutoSituacaoServiceImpl implements ProdutoSituacaoService {
     private final ProdutoSituacaoRepository produtoSituacaoRepository;
 
     @Override
+    @Transactional
     public void upsertProdutoSituacoes(List<ProdutoSituacaoUpsertDto> produtoSituacoesUpsertDtos) {
         this.produtoSituacaoRepository.upsertProdutoSituacoes(produtoSituacoesUpsertDtos);
     }
@@ -38,5 +40,11 @@ public class ProdutoSituacaoServiceImpl implements ProdutoSituacaoService {
         return this.produtoSituacaoRepository.findById(idProdutoSituacao).map(ProdutoSituacaoOutDto::new).orElseThrow(() -> {
             return new RuntimeException("produto situação não encontrado para o id " + idProdutoSituacao);
         });
+    }
+
+    @Override
+    @Transactional
+    public void removerPorIds(List<Short> produtoSituacaoIds) {
+        this.produtoSituacaoRepository.removeAllByIdIn(produtoSituacaoIds);
     }
 }

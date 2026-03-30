@@ -8,6 +8,7 @@ import com.github.arieljorge.sgto.entity.Contribuicao;
 import com.github.arieljorge.sgto.enumerator.PlataformaExterna;
 import com.github.arieljorge.sgto.repository.ContribuicaoRepository;
 import com.github.arieljorge.sgto.service.ContribuicaoService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ public class ContribuicaoServiceImpl implements ContribuicaoService {
     private final ContribuicaoRepository contribuicaoRepository;
 
     @Override
+    @Transactional
     public void upsertContribuicoes(List<ContribuicaoUpsertDto> contribuicaoUpsertDtos) {
         this.contribuicaoRepository.upsertContribuicoes(contribuicaoUpsertDtos);
     }
@@ -41,5 +43,11 @@ public class ContribuicaoServiceImpl implements ContribuicaoService {
         return this.contribuicaoRepository.findById(idContribuicao).map(ContribuicaoOutDto::new).orElseThrow(() -> {
             return new RuntimeException("contribuição não encontrada para o id " + idContribuicao);
         });
+    }
+
+    @Override
+    @Transactional
+    public void removerPorIds(List<Short> contribuicaoIds) {
+        this.contribuicaoRepository.deleteAllByIdIn(contribuicaoIds);
     }
 }

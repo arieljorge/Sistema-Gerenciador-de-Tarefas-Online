@@ -18,9 +18,9 @@ public class ProdutoSituacaoController {
     private final ProdutoSituacaoService produtoSituacaoService;
 
     @PostMapping
-    public ResponseEntity<Void> upsertProdutoSituacoes(@Valid @RequestBody List<ProdutoSituacaoUpsertDto> produtoSituacaoUpsertDtos) {
+    public ResponseEntity<ApiResponse<Void>> upsertProdutoSituacoes(@Valid @RequestBody List<ProdutoSituacaoUpsertDto> produtoSituacaoUpsertDtos) {
         this.produtoSituacaoService.upsertProdutoSituacoes(produtoSituacaoUpsertDtos);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponse<>(true, "produto situações salvas com sucesso.", null));
     }
 
     @GetMapping
@@ -33,5 +33,11 @@ public class ProdutoSituacaoController {
     public ResponseEntity<ApiResponse<ProdutoSituacaoOutDto>> obterProdutoSituacaoId(@PathVariable("id") Short idProdutoSituacao) {
         final ProdutoSituacaoOutDto response = this.produtoSituacaoService.obterProdutoSituacaoPorId(idProdutoSituacao);
         return ResponseEntity.ok(new ApiResponse<>(true, null, response));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<Void>> deletarProdutoSituacoes(@Valid @RequestBody List<Short> produtoSituacoesIds) {
+        this.produtoSituacaoService.removerPorIds(produtoSituacoesIds);
+        return ResponseEntity.ok(new ApiResponse<>(true, "produto situações deletadas com sucesso.", null));
     }
 }

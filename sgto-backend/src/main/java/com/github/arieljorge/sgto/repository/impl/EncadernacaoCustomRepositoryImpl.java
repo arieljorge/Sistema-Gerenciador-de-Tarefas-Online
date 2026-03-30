@@ -23,7 +23,6 @@ public class EncadernacaoCustomRepositoryImpl implements EncadernacaoCustomRepos
             VALUES (?, ?, ?)
             ON CONFLICT (nome, plataforma_origem)
             DO UPDATE SET
-                nome = EXCLUDED.nome,
                 id_externo = EXCLUDED.id_externo;
         """;
 

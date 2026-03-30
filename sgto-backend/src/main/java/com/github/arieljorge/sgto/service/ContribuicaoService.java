@@ -12,4 +12,5 @@ public interface ContribuicaoService {
     void upsertContribuicoes(List<ContribuicaoUpsertDto> contribuicaoUpsertDtos);
     PageResponseDto<ContribuicaoOutDto> obterContribuicoes(Pageable pageable, ContribuicaoFilterDto contribuicaoFilterDto);
     ContribuicaoOutDto obterContribuicaoPorId(Short idContribuicao);
+    void removerPorIds(List<Short> contribuicaoIds);
 }

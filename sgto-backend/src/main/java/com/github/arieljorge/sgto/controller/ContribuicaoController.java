@@ -18,9 +18,9 @@ public class ContribuicaoController {
     private final ContribuicaoService contribuicaoService;
 
     @PostMapping
-    public ResponseEntity<Void> upsertContribuicoes(@Valid @RequestBody List<ContribuicaoUpsertDto> contribuicaoUpsertDtos) {
+    public ResponseEntity<ApiResponse<Void>> upsertContribuicoes(@Valid @RequestBody List<ContribuicaoUpsertDto> contribuicaoUpsertDtos) {
         this.contribuicaoService.upsertContribuicoes(contribuicaoUpsertDtos);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ApiResponse<>(true, "contribuições salvas com sucesso.", null));
     }
 
     @GetMapping
@@ -33,5 +33,11 @@ public class ContribuicaoController {
     public ResponseEntity<ApiResponse<ContribuicaoOutDto>> obterContribuicao(@PathVariable("id") Short idContribuicao) {
         final ContribuicaoOutDto response = this.contribuicaoService.obterContribuicaoPorId(idContribuicao);
         return ResponseEntity.ok(new ApiResponse<>(true, null, response));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<Void>> deletarContribuicoes(@Valid @RequestBody List<Short> contribuicoesIds) {
+        this.contribuicaoService.removerPorIds(contribuicoesIds);
+        return ResponseEntity.ok(new ApiResponse<>(true, "contribuições deletadas com sucesso.", null));
     }
 }

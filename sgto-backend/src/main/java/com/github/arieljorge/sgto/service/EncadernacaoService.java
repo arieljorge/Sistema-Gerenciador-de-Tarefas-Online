@@ -9,4 +9,5 @@ public interface EncadernacaoService {
     void upsertEncadernacoes(List<EncadernacaoUpsertDto> encadernacaoUpsertDtos);
     PageResponseDto<EncadernacaoOutDto> obterEncadernacoes(Pageable pageable, EncadernacaoFilterDto encadernacaoFilterDto);
     EncadernacaoOutDto obterEncadernacaoPorId(Short idEncadernacao);
+    void removerPorIds(List<Short> encadernacaoIds);
 }
