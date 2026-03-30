@@ -1,0 +1,2 @@
+ALTER TABLE cliente ALTER COLUMN db_username DROP NOT NULL;
+ALTER TABLE cliente ALTER COLUMN db_password DROP NOT NULL;
