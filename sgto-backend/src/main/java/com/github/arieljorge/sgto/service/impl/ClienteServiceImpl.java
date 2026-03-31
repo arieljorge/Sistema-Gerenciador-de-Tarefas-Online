@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ClienteServiceImpl implements ClienteService {
@@ -46,15 +48,15 @@ public class ClienteServiceImpl implements ClienteService {
             return new RuntimeException("erro ao atualizar cliente, cliente não encontrado para o id " + clienteEditDto.id());
         });
 
-        if (this.clienteRepository.existsByNome(clienteEditDto.nome())) {
+        if (this.clienteRepository.existsByNomeAndIdIsNot(clienteEditDto.nome(), clienteEditDto.id())) {
             throw new RuntimeException("erro ao atualizar cliente, cliente com mesmo nome já cadastrado.");
         }
 
-        cliente.setAtivo(clienteEditDto.ativo());
-        cliente.setNome(clienteEditDto.nome());
-        cliente.setDbHost(clienteEditDto.dbHost());
-        cliente.setDbUsername(clienteEditDto.dbUsername());
-        cliente.setDbPassword(clienteEditDto.dbPassword());
+        Optional.ofNullable(clienteEditDto.ativo()).ifPresent(cliente::setAtivo);
+        Optional.ofNullable(clienteEditDto.nome()).ifPresent(cliente::setNome);
+        Optional.ofNullable(clienteEditDto.dbHost()).ifPresent(cliente::setDbHost);
+        Optional.ofNullable(clienteEditDto.dbUsername()).ifPresent(cliente::setDbUsername);
+        Optional.ofNullable(clienteEditDto.dbPassword()).ifPresent(cliente::setDbPassword);
 
         cliente = this.clienteRepository.save(cliente);
 
