@@ -1,4 +1,4 @@
-import {useAuth} from "@contexts/AuthContext.tsx";
+import {useAuth} from "@hooks/useAuth";
 import {Navigate, Outlet, useLocation} from "react-router-dom";
 import AppLayout from "@components/layout/AppLayout.tsx";
 
@@ -11,7 +11,6 @@ export function PublicRoute() {
         return <Navigate to={destination} replace/>;
     }
 
-    // remover applayout
     return (
         <AppLayout>
             <Outlet/>
