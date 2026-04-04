@@ -158,7 +158,7 @@ export default function Encadernacao() {
             title={"Encadernações"}
             actions={
                 <Button variant="contained" onClick={handleCreateButtonClick} startIcon={<AddIcon/>}>
-                    Create
+                    Criar Novo
                 </Button>
             }
         >

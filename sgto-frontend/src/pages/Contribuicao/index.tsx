@@ -158,7 +158,7 @@ export default function Contribuicao() {
             title={"Contribuições"}
             actions={
                 <Button variant="contained" onClick={handleCreateButtonClick} startIcon={<AddIcon/>}>
-                    Create
+                    Criar Novo
                 </Button>
             }
         >

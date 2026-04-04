@@ -158,7 +158,7 @@ export default function ProdutoSituacao() {
             title={"Produto Situações"}
             actions={
                 <Button variant="contained" onClick={handleCreateButtonClick} startIcon={<AddIcon/>}>
-                    Create
+                    Criar Novo
                 </Button>
             }
         >
