@@ -3,7 +3,7 @@ import {AxiosAuthInstance} from "@configs/AxiosInstance.ts";
 import type {AxiosRequestConfig} from "axios";
 import type {Pagination, ResponseAPI} from "@/types/pagination.ts";
 
-const BASE_PATH = "encadernacao";
+const BASE_PATH = "/encadernacao";
 
 class EncadernacaoService extends AxiosHttpClient{
     salvarEncadernacoes(data: Encadernacao[]): Promise<ResponseAPI<void>> {
@@ -13,10 +13,10 @@ class EncadernacaoService extends AxiosHttpClient{
         } as AxiosRequestConfig)
     }
 
-    obterEncadernacoes(page?: number, size?: number): Promise<ResponseAPI<Pagination<Encadernacao>>> {
+    obterEncadernacoes(plataforma?: string, page?: number, size?: number): Promise<ResponseAPI<Pagination<Encadernacao>>> {
         return this.get({
-            urls: BASE_PATH,
-            params: {page, size}
+            url: BASE_PATH,
+            params: {plataforma, page: page || 0, size: size || 30}
         } as AxiosRequestConfig);
     }
     

@@ -5,7 +5,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import SettingsIcon from '@mui/icons-material/Settings';
+// import SettingsIcon from '@mui/icons-material/Settings';
 import DataUsageIcon from '@mui/icons-material/DataUsage';
 import {NavLink} from "react-router-dom";
 import type {ReactNode} from "react";
@@ -16,7 +16,7 @@ const mainListItems: MenuOption[] = [
 ];
 
 const secondaryListItems: MenuOption[] = [
-    { text: 'Settings', icon: <SettingsIcon/>, path: ""}
+    // { text: 'Settings', icon: <SettingsIcon/>, path: ""}
 ];
 
 type MenuOption = {

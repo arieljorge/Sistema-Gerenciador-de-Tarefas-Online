@@ -1,14 +1,18 @@
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import PageContainer from "@components/PageContainer";
-import {Paper, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tabs} from "@mui/material";
+import {Paper, Tab, Tabs} from "@mui/material";
 import Box from "@mui/material/Box";
 import {type SyntheticEvent, useEffect, useState} from "react";
 import {plataformaService} from "@services/plataforma.service.ts";
+import {type Encadernacao, encadernacaoService} from "@services/encadernacao.service.ts";
+import {DataGrid, type GridColDef, type GridPaginationModel} from "@mui/x-data-grid";
+import IconButton from "@mui/material/IconButton";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import RemoveDialog from "@pages/Encadernacao/components/RemoveDialog.tsx";
+import CreateForm from "@pages/Encadernacao/components/CreateForm.tsx";
+import EditForm from "@pages/Encadernacao/components/EditForm.tsx";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -39,99 +43,159 @@ function a11yProps(index: number) {
     };
 }
 
+type SearchParams = {
+    page: number;
+    pageSize: number;
+}
+
 export default function Encadernacao() {
+    const defaultSearchParams: SearchParams = {
+        page: 0,
+        pageSize: 25
+    }
+
     const [tabValue, setTabValueValue] = useState(0);
     const [plataformas, setPlataformas] = useState<string[]>(["Padrão"]);
+    const [encadernacoes, setEncadernacoes] = useState<Encadernacao[]>([]);
+    const [rowCount, setRowCount] = useState<number>(0);
+    const [searchParams, setSearchParams] = useState<SearchParams>(defaultSearchParams);
+    const [contextId, setContextId] = useState<number | undefined>();
 
-    const handleChange = (event: SyntheticEvent, newValue: number) => {
+    const [isRemoveDialogOpen, setIsRemoveDialogOpen] = useState<boolean>(false);
+    const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
+
+    const handleChange = (_: SyntheticEvent, newValue: number) => {
+        setSearchParams(defaultSearchParams);
+        loadData(plataformas[newValue]);
         setTabValueValue(newValue);
     };
 
+    const loadData = async (plataforma?: string, page?: number, size?: number) => {
+        try {
+            const response = await encadernacaoService.obterEncadernacoes(
+                plataforma || plataformas[0], page ?? searchParams.page, size ?? searchParams.pageSize
+            );
+            setSearchParams({page: response.data.page, pageSize: response.data.size});
+            setEncadernacoes(response.data.content);
+            setRowCount(response.data.totalElements);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     useEffect(() => {
-        plataformaService.obterPlataformas().then(response => {
-            setPlataformas(response.data);
+        (async () => {
+            try {
+                const plataformaServiceResponse = await plataformaService.obterPlataformas();
+                const palataformasData = plataformaServiceResponse.data;
+
+                const encadernacaoServiceResponse = await encadernacaoService.obterEncadernacoes(palataformasData[0], 0, 25);
+
+                setPlataformas(palataformasData);
+                setEncadernacoes(encadernacaoServiceResponse.data.content);
+                setRowCount(encadernacaoServiceResponse.data.totalElements);
+            } catch (err) {
+                console.error(err);
+            }
+        })();
+    }, []);
+
+    const handlePaginationModelChange = (model: GridPaginationModel) => {
+        setSearchParams({
+            page: model.page,
+            pageSize: model.pageSize,
         });
-    }, [])
+        loadData(plataformas[tabValue], model.page, model.pageSize);
+    }
+
+    const handleCreateButtonClick = () => {
+        setIsCreateDialogOpen(true);
+    }
+
+    const handleEditButtonClick = (id: number) => {
+        setContextId(id);
+        setIsEditDialogOpen(true);
+    }
+
+    const handleRemoveButtonClick = (id: number) => {
+        setContextId(id);
+        setIsRemoveDialogOpen(true);
+    }
+
+    const handleRemove = async () => {
+        if (!contextId) return;
+        await encadernacaoService.deletarEncadernacao(contextId);
+        setIsRemoveDialogOpen(false);
+        setContextId(undefined);
+        await loadData(plataformas[tabValue], defaultSearchParams.page, defaultSearchParams.pageSize);
+    }
+
+    const columns: GridColDef[] = [
+        { field: 'id', headerName: 'ID', width: 60, sortable: false },
+        { field: 'plataformaOrigem', headerName: 'PLATAFORMA', width: 120, sortable: false },
+        { field: 'idExterno', headerName: 'ID EXTERNO', width: 120, sortable: false },
+        { field: 'nome', headerName: 'NOME', width: 200, sortable: false },
+        {
+            field: 'actions',
+            type: 'actions',
+            flex: 1,
+            align: 'right',
+            minWidth: 100,
+            getActions: ({row}) => [
+                <IconButton onClick={() => handleEditButtonClick(row.id)}>
+                    <EditIcon/>
+                </IconButton>,
+                <IconButton onClick={() => handleRemoveButtonClick(row.id)}>
+                    <DeleteForeverIcon/>
+                </IconButton>
+            ]
+        }
+    ]
 
     return (
         <PageContainer
             title={"Encadernações"}
             actions={
-               <Stack direction="row" alignItems="center" spacing={1}>
-                   <Tooltip title="Reload data" placement="right" enterDelay={1000}>
-                       <div>
-                           <IconButton size="small" aria-label="refresh" onClick={() => {}}>
-                               <RefreshIcon />
-                           </IconButton>
-                       </div>
-                   </Tooltip>
-                   <Button
-                       variant="contained"
-                       onClick={() => {}}
-                       startIcon={<AddIcon />}
-                   >
-                       Create
-                   </Button>
-               </Stack>
+                <Button variant="contained" onClick={handleCreateButtonClick} startIcon={<AddIcon/>}>
+                    Create
+                </Button>
             }
         >
             <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <Tabs value={tabValue} onChange={handleChange}>
                         {plataformas.map((value, index) => (
-                            <Tab label={value} {...a11yProps(index)}/>
+                            <Tab key={index} label={value} {...a11yProps(index)}/>
                         ))}
                     </Tabs>
                 </Box>
-                {plataformas.map((value, index) => (
-                    <CustomTabPanel value={tabValue} index={index}>
-                        {value}
+                {plataformas.map((_, index) => (
+                    <CustomTabPanel value={tabValue} index={index} key={index}>
+                        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                            <DataGrid
+                                rows={encadernacoes}
+                                columns={columns}
+                                pagination
+                                paginationMode={"server"}
+                                rowCount={rowCount}
+                                paginationModel={{ page: searchParams.page, pageSize: searchParams.pageSize }}
+                                onPaginationModelChange={handlePaginationModelChange}
+                                pageSizeOptions={[1, 5, 10, 25, 50]}
+                                sx={{ border: 0 }}
+                                rowSelection
+                                disableRowSelectionOnClick
+                                disableColumnMenu
+                                disableColumnSelector
+                                disableColumnFilter
+                            />
+                        </Paper>
                     </CustomTabPanel>
                 ))}
             </Box>
-            {/*<Paper sx={{ width: '100%', overflow: 'hidden' }}>*/}
-            {/*    <TableContainer sx={{ maxHeight: 440 }}>*/}
-            {/*        <Table stickyHeader aria-label="sticky table">*/}
-            {/*            <TableHead>*/}
-            {/*                <TableRow>*/}
-            {/*                    <TableCell*/}
-            {/*                    >*/}
-            {/*                       asd*/}
-            {/*                    </TableCell>*/}
-            {/*                </TableRow>*/}
-            {/*            </TableHead>*/}
-            {/*            <TableBody>*/}
-            {/*                /!*{rows*!/*/}
-            {/*                /!*    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)*!/*/}
-            {/*                /!*    .map((row) => {*!/*/}
-            {/*                /!*        return (*!/*/}
-            {/*                /!*            <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>*!/*/}
-            {/*                /!*                {columns.map((column) => {*!/*/}
-            {/*                /!*                    const value = row[column.id];*!/*/}
-            {/*                /!*                    return (*!/*/}
-            {/*                /!*                        <TableCell key={column.id} align={column.align}>*!/*/}
-            {/*                /!*                            {column.format && typeof value === 'number'*!/*/}
-            {/*                /!*                                ? column.format(value)*!/*/}
-            {/*                /!*                                : value}*!/*/}
-            {/*                /!*                        </TableCell>*!/*/}
-            {/*                /!*                    );*!/*/}
-            {/*                /!*                })}*!/*/}
-            {/*                /!*            </TableRow>*!/*/}
-            {/*                /!*        );*!/*/}
-            {/*                /!*    })}*!/*/}
-            {/*            </TableBody>*/}
-            {/*        </Table>*/}
-            {/*    </TableContainer>*/}
-            {/*    /!*<TablePagination*!/*/}
-            {/*    /!*    rowsPerPageOptions={[10, 25, 100]}*!/*/}
-            {/*    /!*    component="div"*!/*/}
-            {/*    /!*    count={rows.length}*!/*/}
-            {/*    /!*    rowsPerPage={rowsPerPage}*!/*/}
-            {/*    /!*    page={page}*!/*/}
-            {/*    /!*    onPageChange={handleChangePage}*!/*/}
-            {/*    /!*    onRowsPerPageChange={handleChangeRowsPerPage}*!/*/}
-                {/*/>*/}
-            {/*</Paper>*/}
+            <RemoveDialog isOpen={isRemoveDialogOpen} onClose={() => setIsRemoveDialogOpen(false)} handleRemove={handleRemove}/>
+            <CreateForm isOpen={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} loadData={() => loadData(plataformas[tabValue], defaultSearchParams.page, defaultSearchParams.pageSize)} plataformas={plataformas}/>
+            <EditForm id={contextId} isOpen={isEditDialogOpen} onClose={() => setIsEditDialogOpen(false)} loadData={() => loadData(plataformas[tabValue], defaultSearchParams.page, defaultSearchParams.pageSize)} plataformas={plataformas}/>
         </PageContainer>
     );
 }

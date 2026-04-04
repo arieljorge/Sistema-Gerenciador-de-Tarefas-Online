@@ -5,6 +5,8 @@ import com.github.arieljorge.sgto.service.EncadernacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +26,10 @@ public class EncadernacaoController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<PageResponseDto<EncadernacaoOutDto>>> obterEncadernacoes(Pageable pageable, EncadernacaoFilterDto encadernacaoFilterDto) {
+    public ResponseEntity<ApiResponse<PageResponseDto<EncadernacaoOutDto>>> obterEncadernacoes(
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+            EncadernacaoFilterDto encadernacaoFilterDto
+    ) {
         final PageResponseDto<EncadernacaoOutDto> response = this.encadernacaoService.obterEncadernacoes(pageable, encadernacaoFilterDto);
         return ResponseEntity.ok(new ApiResponse<>(true, null, response));
     }
