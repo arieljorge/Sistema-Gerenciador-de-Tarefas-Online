@@ -16,11 +16,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -70,8 +73,19 @@ public class UsuarioServiceImpl implements UsuarioService {
             new UsernamePasswordAuthenticationToken(usuarioLoginDto.username(), usuarioLoginDto.senha())
         );
 
+        Usuario usuario = this.usuarioRepository.findByUsername(usuarioLoginDto.username()).orElseThrow(() -> {
+            return new UsernameNotFoundException("Usuário não encontrado");
+        });
+
         UserDetails userDetails = this.usuarioDetailsService.loadUserByUsername(usuarioLoginDto.username());
-        String token = this.jwtService.gerarToken(userDetails);
+        List<String> roles = this.usuariosRolesRepository.findNomeRolesByIdUsuario(usuario.getId());
+
+        Map<String, Object> extraClaims = Map.of(
+            "name", usuario.getUsername(),
+            "roles", roles
+        );
+
+        String token = this.jwtService.gerarToken(extraClaims, userDetails);
         return new UsuarioLoginOutDto(token);
     }
 }

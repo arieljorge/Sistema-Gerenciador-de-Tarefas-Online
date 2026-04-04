@@ -17,10 +17,10 @@ import java.util.function.Function;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:}")
     private String secret;
 
-    @Value("${jwt.expiration-ms}")
+    @Value("${jwt.expiration-ms:86400000}")
     private long expirationMs;
 
     private SecretKey getSigningKey() {

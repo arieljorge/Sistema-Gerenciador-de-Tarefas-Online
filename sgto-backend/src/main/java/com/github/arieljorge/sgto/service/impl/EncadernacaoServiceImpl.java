@@ -7,6 +7,7 @@ import com.github.arieljorge.sgto.repository.EncadernacaoRepository;
 import com.github.arieljorge.sgto.service.EncadernacaoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,34 @@ public class EncadernacaoServiceImpl implements EncadernacaoService {
 
     @Override
     @Transactional
-    public void upsertEncadernacoes(List<EncadernacaoUpsertDto> encadernacaoUpsertDtos) {
-        this.encadernacaoRepository.upsertEncadernacoes(encadernacaoUpsertDtos);
+    public void cadastrarEncadernacao(EncadernacaoCreateDto encadernacaoCreateDto) {
+        if (this.encadernacaoRepository.existsByNomeAndPlataformaOrigem(encadernacaoCreateDto.nome(), encadernacaoCreateDto.plataformaOrigem())) {
+            throw new RuntimeException("indentificada encadernação com o mesmo nome");
+        }
+
+        Encadernacao encadernacao = new Encadernacao();
+        encadernacao.setNome(encadernacaoCreateDto.nome());
+        encadernacao.setIdExterno(StringUtils.trimToNull(encadernacaoCreateDto.idExterno()));
+        encadernacao.setPlataformaOrigem(encadernacaoCreateDto.plataformaOrigem());
+
+        this.encadernacaoRepository.save(encadernacao);
+    }
+
+    @Override
+    @Transactional
+    public void atualizarEncadernacao(EncadernacaoUpdateDto encadernacaoUpdateDto) {
+        Encadernacao encadernacao = this.encadernacaoRepository.findById(encadernacaoUpdateDto.id()).orElseThrow(() -> {
+            return new RuntimeException("encadernação não encontrada para o id " + encadernacaoUpdateDto.id());
+        });
+
+        if (this.encadernacaoRepository.existsByNomeAndIdIsNot(encadernacao.getNome(), encadernacao.getId())) {
+            throw new RuntimeException("indentificada encadernação com o mesmo nome");
+        }
+
+        encadernacao.setNome(encadernacaoUpdateDto.nome());
+        encadernacao.setIdExterno(StringUtils.trimToNull(encadernacaoUpdateDto.idExterno()));
+
+        this.encadernacaoRepository.save(encadernacao);
     }
 
     @Override

@@ -21,15 +21,7 @@ public class AuthController {
 
     private final UsuarioService usuarioService;
 
-    @PostMapping("/cadastrar")
-    public ResponseEntity<ApiResponse<Void>> cadastrarUsuario(@Valid @RequestBody UsuarioCreateDto usuarioCreateDto) {
-        this.usuarioService.cadastrarUsuario(usuarioCreateDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(true, "usuário criado com sucesso.", null));
-    }
-
-    @PostMapping("/login")
+    @PostMapping
     public ResponseEntity<ApiResponse<UsuarioLoginOutDto>> loginUsuario(@Valid @RequestBody UsuarioLoginDto usuarioLoginDto) {
         final UsuarioLoginOutDto response = this.usuarioService.autenticar(usuarioLoginDto);
         return ResponseEntity.ok(new ApiResponse<>(true, null, response));
