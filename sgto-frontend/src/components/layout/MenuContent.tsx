@@ -12,7 +12,9 @@ import type {ReactNode} from "react";
 
 const mainListItems: MenuOption[] = [
     { text: 'Quadro de Tarefas', icon: <DashboardIcon/>, path: "/"},
-    { text: 'Encadernação', icon: <DataUsageIcon/>, path: "/encadernacao"}
+    { text: 'Encadernação', icon: <DataUsageIcon/>, path: "/encadernacao"},
+    { text: 'Contribuição', icon: <DataUsageIcon/>, path: "/contribuicao"},
+    { text: 'Produto Situação', icon: <DataUsageIcon/>, path: "/produto-situacao"},
 ];
 
 const secondaryListItems: MenuOption[] = [

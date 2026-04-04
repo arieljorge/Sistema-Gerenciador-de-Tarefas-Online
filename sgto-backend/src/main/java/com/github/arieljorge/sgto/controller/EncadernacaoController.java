@@ -20,9 +20,15 @@ public class EncadernacaoController {
     private final EncadernacaoService encadernacaoService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Void>> upsertEncadernacoes(@Valid @RequestBody List<EncadernacaoUpsertDto> encadernacaoUpsertDtos) {
-        this.encadernacaoService.upsertEncadernacoes(encadernacaoUpsertDtos);
-        return ResponseEntity.ok(new ApiResponse<>(true, "encadernações salvas com sucesso.", null));
+    public ResponseEntity<ApiResponse<Void>> cadastrarEncadernacao(@Valid @RequestBody EncadernacaoCreateDto encadernacaoCreateDto) {
+        this.encadernacaoService.cadastrarEncadernacao(encadernacaoCreateDto);
+        return ResponseEntity.ok(new ApiResponse<>(true, "encadernações salva com sucesso.", null));
+    }
+
+    @PutMapping
+    public ResponseEntity<ApiResponse<Void>> editarEncadernacao(@Valid @RequestBody EncadernacaoUpdateDto encadernacaoUpdateDto) {
+        this.encadernacaoService.atualizarEncadernacao(encadernacaoUpdateDto);
+        return ResponseEntity.ok(new ApiResponse<>(true, "encadernações salva com sucesso.", null));
     }
 
     @GetMapping

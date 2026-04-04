@@ -3,54 +3,54 @@ import {AxiosAuthInstance} from "@configs/AxiosInstance.ts";
 import type {AxiosRequestConfig} from "axios";
 import type {Pagination, ResponseAPI} from "@/types/pagination.ts";
 
-const BASE_PATH = "/encadernacao";
+const BASE_PATH = "/produto-situacao";
 
-class EncadernacaoService extends AxiosHttpClient{
-    salvarEncadernacao(data: Encadernacao): Promise<ResponseAPI<void>> {
+class ProdutoSituacaoService extends AxiosHttpClient{
+    salvarProdutoSituacao(data: ProdutoSituacao): Promise<ResponseAPI<void>> {
         return this.post({
             url: BASE_PATH,
             data
         } as AxiosRequestConfig)
     }
 
-    atualizarEncadernacao(data: EncadernacaoEdit): Promise<ResponseAPI<void>> {
+    atualizarProdutoSituacao(data: ProdutoSituacaoEdit): Promise<ResponseAPI<void>> {
         return this.put({
             url: BASE_PATH,
             data
         } as AxiosRequestConfig)
     }
 
-    obterEncadernacoes(plataforma?: string, page?: number, size?: number): Promise<ResponseAPI<Pagination<Encadernacao>>> {
+    obterProdutoSituacoes(plataforma?: string, page?: number, size?: number): Promise<ResponseAPI<Pagination<ProdutoSituacao>>> {
         return this.get({
             url: BASE_PATH,
             params: {plataforma, page: page || 0, size: size || 30}
         } as AxiosRequestConfig);
     }
     
-    obterEncadernacao(idEncadernacao: number): Promise<ResponseAPI<Encadernacao>> {
+    obterProdutoSituacao(idProdutoSituacao: number): Promise<ResponseAPI<ProdutoSituacao>> {
         return this.get({
-            url: `${BASE_PATH}/${idEncadernacao}`
+            url: `${BASE_PATH}/${idProdutoSituacao}`
         } as AxiosRequestConfig);
     }
 
-    deletarEncadernacao(idEncadernacao: number): Promise<ResponseAPI<void>> {
+    deletarProdutoSituacao(idProdutoSituacao: number): Promise<ResponseAPI<void>> {
         return this.delete({
-            url: `${BASE_PATH}/${idEncadernacao}`
+            url: `${BASE_PATH}/${idProdutoSituacao}`
         } as AxiosRequestConfig);
     }
 }
 
-export interface Encadernacao {
+export interface ProdutoSituacao {
     id?: number;
     nome: string;
     idExterno?: string;
     plataformaOrigem: string;
 }
 
-export interface EncadernacaoEdit {
+export interface ProdutoSituacaoEdit {
     id: number;
     nome: string;
     idExterno?: string;
 }
 
-export const encadernacaoService = new EncadernacaoService(AxiosAuthInstance);
+export const produtoSituacaoService = new ProdutoSituacaoService(AxiosAuthInstance);

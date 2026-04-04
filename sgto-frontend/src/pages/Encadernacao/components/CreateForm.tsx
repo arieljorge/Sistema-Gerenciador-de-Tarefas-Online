@@ -23,17 +23,21 @@ interface CreateFormProps {
     plataformas: string[];
 }
 
-const loginSchema = z.object({
+const schema = z.object({
     nome: z.string(),
-    idExterno: z.string(),
+    idExterno: z.string().nullable().optional().transform(val => val ?? ""),
     plataformaOrigem: z.string()
 });
 
-type LoginForm = z.infer<typeof loginSchema>;
+type SchemaForm = {
+    nome: string;
+    idExterno?: string | null;
+    plataformaOrigem: string;
+}
 
 export default function CreateForm({isOpen, onClose, loadData, plataformas}: CreateFormProps) {
-    const {control, reset, handleSubmit, formState: {errors, isSubmitting}} = useForm<LoginForm>({
-        resolver: zodResolver(loginSchema),
+    const {control, reset, handleSubmit, formState: {errors, isSubmitting}} = useForm<SchemaForm>({
+        resolver: zodResolver(schema),
         defaultValues: {
             nome: "",
             idExterno: "",
@@ -41,13 +45,17 @@ export default function CreateForm({isOpen, onClose, loadData, plataformas}: Cre
         }
     });
 
-    const saveForm = async (data: LoginForm) => {
-        await encadernacaoService.salvarEncadernacoes([{
+    const saveForm = async (data: SchemaForm) => {
+        await encadernacaoService.salvarEncadernacao({
             nome: data.nome,
-            idExterno: data.idExterno,
+            idExterno: data.idExterno ?? "",
             plataformaOrigem: data.plataformaOrigem
-        }]);
-        reset();
+        });
+        reset({
+            nome: "",
+            idExterno: "",
+            plataformaOrigem: ""
+        });
         await loadData();
         onClose();
     }

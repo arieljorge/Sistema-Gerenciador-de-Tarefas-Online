@@ -22,5 +22,13 @@ export const privateRoutes: RouteConfig[] = [
     {
         path: "/encadernacao",
         component: lazy(() => import("@pages/Encadernacao"))
+    },
+    {
+        path: "/contribuicao",
+        component: lazy(() => import("@pages/Contribuicao"))
+    },
+    {
+        path: "/produto-situacao",
+        component: lazy(() => import("@pages/ProdutoSituacao"))
     }
 ]

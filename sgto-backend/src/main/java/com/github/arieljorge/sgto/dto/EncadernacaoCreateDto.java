@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record ContribuicaoUpsertDto(
+public record EncadernacaoCreateDto(
         @NotBlank @Size(max = 100) String nome,
         @Size(max = 50) String idExterno,
         @NotNull PlataformaExterna plataformaOrigem

@@ -5,6 +5,8 @@ import com.github.arieljorge.sgto.service.ProdutoSituacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,13 +20,22 @@ public class ProdutoSituacaoController {
     private final ProdutoSituacaoService produtoSituacaoService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Void>> upsertProdutoSituacoes(@Valid @RequestBody List<ProdutoSituacaoUpsertDto> produtoSituacaoUpsertDtos) {
-        this.produtoSituacaoService.upsertProdutoSituacoes(produtoSituacaoUpsertDtos);
+    public ResponseEntity<ApiResponse<Void>> upsertProdutoSituacoes(@Valid @RequestBody ProdutoSituacaoCreateDto produtoSituacaoCreateDto) {
+        this.produtoSituacaoService.cadastrarProdutoSituacao(produtoSituacaoCreateDto);
         return ResponseEntity.ok(new ApiResponse<>(true, "produto situações salvas com sucesso.", null));
     }
 
+    @PutMapping
+    public ResponseEntity<ApiResponse<Void>> editarEncadernacao(@Valid @RequestBody ProdutoSituacaoUpdateDto produtoSituacaoUpdateDto) {
+        this.produtoSituacaoService.atualizarProdutoSituacao(produtoSituacaoUpdateDto);
+        return ResponseEntity.ok(new ApiResponse<>(true, "encadernações salva com sucesso.", null));
+    }
+
     @GetMapping
-    public ResponseEntity<ApiResponse<PageResponseDto<ProdutoSituacaoOutDto>>> obterProdutoSituacoes(Pageable pageable, ProdutoSituacaoFilterDto produtoSituacaoFilterDto) {
+    public ResponseEntity<ApiResponse<PageResponseDto<ProdutoSituacaoOutDto>>> obterProdutoSituacoes(
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+            ProdutoSituacaoFilterDto produtoSituacaoFilterDto
+    ) {
         final PageResponseDto<ProdutoSituacaoOutDto> response = this.produtoSituacaoService.obterProdutoSituacoes(pageable, produtoSituacaoFilterDto);
         return ResponseEntity.ok(new ApiResponse<>(true, null, response));
     }

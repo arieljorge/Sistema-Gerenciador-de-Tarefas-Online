@@ -5,14 +5,14 @@ import {Paper, Tab, Tabs} from "@mui/material";
 import Box from "@mui/material/Box";
 import {type SyntheticEvent, useEffect, useState} from "react";
 import {plataformaService} from "@services/plataforma.service.ts";
-import {type Encadernacao, encadernacaoService} from "@services/encadernacao.service.ts";
 import {DataGrid, type GridColDef, type GridPaginationModel} from "@mui/x-data-grid";
 import IconButton from "@mui/material/IconButton";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
-import RemoveDialog from "@pages/Encadernacao/components/RemoveDialog.tsx";
-import CreateForm from "@pages/Encadernacao/components/CreateForm.tsx";
-import EditForm from "@pages/Encadernacao/components/EditForm.tsx";
+import {type ProdutoSituacao, produtoSituacaoService} from "@services/produto.situacao.service.ts";
+import RemoveDialog from "@pages/ProdutoSituacao/components/RemoveDialog.tsx";
+import CreateForm from "@pages/ProdutoSituacao/components/CreateForm.tsx";
+import EditForm from "@pages/ProdutoSituacao/components/EditForm.tsx";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -48,7 +48,7 @@ type SearchParams = {
     pageSize: number;
 }
 
-export default function Encadernacao() {
+export default function ProdutoSituacao() {
     const defaultSearchParams: SearchParams = {
         page: 0,
         pageSize: 25
@@ -56,7 +56,7 @@ export default function Encadernacao() {
 
     const [tabValue, setTabValueValue] = useState(0);
     const [plataformas, setPlataformas] = useState<string[]>(["Padrão"]);
-    const [encadernacoes, setEncadernacoes] = useState<Encadernacao[]>([]);
+    const [produtoSituacoes, setProdutoSituacoes] = useState<ProdutoSituacao[]>([]);
     const [rowCount, setRowCount] = useState<number>(0);
     const [searchParams, setSearchParams] = useState<SearchParams>(defaultSearchParams);
     const [contextId, setContextId] = useState<number | undefined>();
@@ -73,11 +73,11 @@ export default function Encadernacao() {
 
     const loadData = async (plataforma?: string, page?: number, size?: number) => {
         try {
-            const response = await encadernacaoService.obterEncadernacoes(
+            const response = await produtoSituacaoService.obterProdutoSituacoes(
                 plataforma || plataformas[0], page ?? searchParams.page, size ?? searchParams.pageSize
             );
             setSearchParams({page: response.data.page, pageSize: response.data.size});
-            setEncadernacoes(response.data.content);
+            setProdutoSituacoes(response.data.content);
             setRowCount(response.data.totalElements);
         } catch (err) {
             console.error(err);
@@ -90,11 +90,11 @@ export default function Encadernacao() {
                 const plataformaServiceResponse = await plataformaService.obterPlataformas();
                 const palataformasData = plataformaServiceResponse.data;
 
-                const encadernacaoServiceResponse = await encadernacaoService.obterEncadernacoes(palataformasData[0], 0, 25);
+                const produtoSituacaoServiceResponse = await produtoSituacaoService.obterProdutoSituacoes(palataformasData[0], 0, 25);
 
                 setPlataformas(palataformasData);
-                setEncadernacoes(encadernacaoServiceResponse.data.content);
-                setRowCount(encadernacaoServiceResponse.data.totalElements);
+                setProdutoSituacoes(produtoSituacaoServiceResponse.data.content);
+                setRowCount(produtoSituacaoServiceResponse.data.totalElements);
             } catch (err) {
                 console.error(err);
             }
@@ -125,7 +125,7 @@ export default function Encadernacao() {
 
     const handleRemove = async () => {
         if (!contextId) return;
-        await encadernacaoService.deletarEncadernacao(contextId);
+        await produtoSituacaoService.deletarProdutoSituacao(contextId);
         setIsRemoveDialogOpen(false);
         setContextId(undefined);
         await loadData(plataformas[tabValue], defaultSearchParams.page, defaultSearchParams.pageSize);
@@ -155,7 +155,7 @@ export default function Encadernacao() {
 
     return (
         <PageContainer
-            title={"Encadernações"}
+            title={"Produto Situações"}
             actions={
                 <Button variant="contained" onClick={handleCreateButtonClick} startIcon={<AddIcon/>}>
                     Create
@@ -174,7 +174,7 @@ export default function Encadernacao() {
                     <CustomTabPanel value={tabValue} index={index} key={index}>
                         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                             <DataGrid
-                                rows={encadernacoes}
+                                rows={produtoSituacoes}
                                 columns={columns}
                                 pagination
                                 paginationMode={"server"}

@@ -6,7 +6,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface EncadernacaoService {
-    void upsertEncadernacoes(List<EncadernacaoUpsertDto> encadernacaoUpsertDtos);
+    void cadastrarEncadernacao(EncadernacaoCreateDto encadernacaoCreateDto);
+    void atualizarEncadernacao(EncadernacaoUpdateDto encadernacaoUpdateDto);
     PageResponseDto<EncadernacaoOutDto> obterEncadernacoes(Pageable pageable, EncadernacaoFilterDto encadernacaoFilterDto);
     EncadernacaoOutDto obterEncadernacaoPorId(Short idEncadernacao);
     void removerPorIds(List<Short> encadernacaoIds);

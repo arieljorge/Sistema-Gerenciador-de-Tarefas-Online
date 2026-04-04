@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import FormLabel from "@mui/material/FormLabel";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
-import {encadernacaoService} from "@services/encadernacao.service.ts";
+import {contribuicaoService} from "@services/contribuicao.service.ts";
 import {useEffect} from "react";
 
 interface EditFormProps {
@@ -43,7 +43,7 @@ export default function EditForm({isOpen, onClose, loadData, id}: EditFormProps)
 
     const saveForm = async (data: SchemaForm) => {
         if (id) {
-            await encadernacaoService.atualizarEncadernacao({
+            await contribuicaoService.atualizarContribuicao({
                 id: id,
                 nome: data.nome,
                 idExterno: data.idExterno ?? ""
@@ -60,17 +60,17 @@ export default function EditForm({isOpen, onClose, loadData, id}: EditFormProps)
 
     useEffect(() => {
         if (!id) return;
-        encadernacaoService.obterEncadernacao(id).then(response => {
+        contribuicaoService.obterContribuicao(id).then(response => {
             reset({
                 nome: response.data.nome,
-                idExterno: response.data.idExterno,
+                idExterno: response.data.idExterno
             });
         })
     }, [id, reset])
 
     return (
         <Dialog open={isOpen} onClose={onClose}>
-            <DialogTitle>Editar Encadernação</DialogTitle>
+            <DialogTitle>Editar Contribuição</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit(saveForm)} id="subscription-form" style={{
                     padding: "1rem",
