@@ -40,4 +40,10 @@ public class ContribuicaoController {
         this.contribuicaoService.removerPorIds(contribuicoesIds);
         return ResponseEntity.ok(new ApiResponse<>(true, "contribuições deletadas com sucesso.", null));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deletarContribuicao(@PathVariable("id") Short idContribuicao) {
+        this.contribuicaoService.removerPorIds(List.of(idContribuicao));
+        return ResponseEntity.ok(new ApiResponse<>(true, "contribuição deletada com sucesso.", null));
+    }
 }

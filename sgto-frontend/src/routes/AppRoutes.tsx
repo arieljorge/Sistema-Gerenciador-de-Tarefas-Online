@@ -3,6 +3,9 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import {Suspense} from "react";
 import {PublicRoute} from "./PublicRoute.tsx";
 import {PrivateRoute} from "@routes/PrivateRoute.tsx";
+import {NotFoundRedirect} from "@routes/NotFoundRedirect.tsx";
+import {CircularProgress} from "@mui/material";
+import Box from "@mui/material/Box";
 
 function groupByRole(routes: typeof privateRoutes) {
     const groups = new Map<string, typeof  privateRoutes>();
@@ -16,12 +19,18 @@ function groupByRole(routes: typeof privateRoutes) {
     return groups;
 }
 
+const PageLoader = () => (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <CircularProgress size={32}/>
+    </Box>
+)
+
 export function AppRoutes() {
     const groups = groupByRole(privateRoutes);
 
     return (
         <BrowserRouter>
-            <Suspense fallback={<div>Carregando...</div>}>
+            <Suspense fallback={<PageLoader/>}>
                 <Routes>
                     <Route element={<PublicRoute/>}>
                         {publicRoutes.map(({path, component: Component}) => (
@@ -39,6 +48,7 @@ export function AppRoutes() {
                             </Route>
                         );
                     })}
+                    <Route path={"*"} element={<NotFoundRedirect/>}/>
                 </Routes>
             </Suspense>
         </BrowserRouter>

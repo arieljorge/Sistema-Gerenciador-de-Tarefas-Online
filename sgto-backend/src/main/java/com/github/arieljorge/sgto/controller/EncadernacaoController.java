@@ -40,4 +40,10 @@ public class EncadernacaoController {
         this.encadernacaoService.removerPorIds(encadernacoesIds);
         return ResponseEntity.ok(new ApiResponse<>(true, "encadernações deletadas com sucesso.", null));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deletarEncadernacao(@PathVariable("id") Short idEncadernacao) {
+        this.encadernacaoService.removerPorIds(List.of(idEncadernacao));
+        return ResponseEntity.ok(new ApiResponse<>(true, "encadernação deletada com sucesso.", null));
+    }
 }

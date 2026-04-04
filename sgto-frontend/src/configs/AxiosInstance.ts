@@ -2,7 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 
 export const AxiosInstanceConfig = {
-    baseURL: import.meta.env.API_URL,
+    baseURL: import.meta.env.VITE_API_URL,
     timeout: 10000,
     paramsSerializer: (params: Record<string, unknown>) => qs.stringify(params, {skipNulls: true})
 }

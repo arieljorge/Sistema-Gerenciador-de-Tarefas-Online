@@ -18,5 +18,9 @@ export const privateRoutes: RouteConfig[] = [
     {
         path: "/",
         component: lazy(() => import("@pages/Login"))
+    },
+    {
+        path: "/encadernacao",
+        component: lazy(() => import("@pages/Encadernacao"))
     }
 ]

@@ -40,4 +40,10 @@ public class ProdutoSituacaoController {
         this.produtoSituacaoService.removerPorIds(produtoSituacoesIds);
         return ResponseEntity.ok(new ApiResponse<>(true, "produto situações deletadas com sucesso.", null));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> deletarProdutoSituacao(@PathVariable("id") Short idProdutoSituacao) {
+        this.produtoSituacaoService.removerPorIds(List.of(idProdutoSituacao));
+        return ResponseEntity.ok(new ApiResponse<>(true, "produto situação deletada com sucesso.", null));
+    }
 }

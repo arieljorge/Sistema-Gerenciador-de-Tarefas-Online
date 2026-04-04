@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MenuContent from './MenuContent';
+import {useAuth} from "@hooks/useAuth.ts";
 
 interface SideMenuMobileProps {
     open: boolean | undefined;
@@ -13,6 +14,13 @@ interface SideMenuMobileProps {
 }
 
 export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobileProps) {
+    const {auth, logout} = useAuth();
+    const user = auth?.user ?? null;
+
+    const handleClick = () => {
+        logout();
+    };
+
     return (
         <Drawer
             anchor="right"
@@ -37,14 +45,11 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
                         direction="row"
                         sx={{ gap: 1, alignItems: 'center', flexGrow: 1, p: 1 }}
                     >
-                        <Avatar
-                            sizes="small"
-                            alt="Riley Carter"
-                            src="/static/images/avatar/7.jpg"
-                            sx={{ width: 24, height: 24 }}
-                        />
+                        <Avatar sizes="small" sx={{ width: 24, height: 24 }}>
+                            {user?.name[0].toUpperCase() ?? "?"}
+                        </Avatar>
                         <Typography component="p" variant="h6">
-                            Riley Carter
+                            {user?.name ?? "----------"}
                         </Typography>
                     </Stack>
                 </Stack>
@@ -54,7 +59,7 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
                     <Divider />
                 </Stack>
                 <Stack sx={{ p: 2 }}>
-                    <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
+                    <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon/>} onClick={handleClick}>
                         Logout
                     </Button>
                 </Stack>

@@ -3,17 +3,17 @@ import type {ResponseAPI} from "../types/pagination.ts";
 import type {AxiosRequestConfig} from "axios";
 import {AxiosPublicInstance} from "../configs/AxiosInstance.ts";
 
-interface LoginRequest {
+export interface LoginRequest {
     username: string;
-    password: string;
+    senha: string;
 }
 
-interface LoginResponse {
+export interface LoginResponse {
     token: string;
 }
 
 class AuthService extends AxiosHttpClient {
-    login(data: LoginRequest): Promise<ResponseAPI<LoginResponse>> {
+    autenticar(data: LoginRequest): Promise<ResponseAPI<LoginResponse>> {
         return this.post({
             url: '/auth',
             data

@@ -11,7 +11,7 @@ export default function OptionsMenu() {
 
     return (
         <IconButton
-            aria-label="Open menu"
+            aria-label="Logout"
             onClick={handleClick}
             sx={{ borderColor: 'transparent' }}
         >

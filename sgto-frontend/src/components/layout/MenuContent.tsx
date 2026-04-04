@@ -7,15 +7,23 @@ import Stack from '@mui/material/Stack';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DataUsageIcon from '@mui/icons-material/DataUsage';
+import {NavLink} from "react-router-dom";
+import type {ReactNode} from "react";
 
-const mainListItems = [
-    { text: 'Quadro de Tarefas', icon: <DashboardIcon /> },
-    { text: 'Genérico', icon: <DataUsageIcon /> }
+const mainListItems: MenuOption[] = [
+    { text: 'Quadro de Tarefas', icon: <DashboardIcon/>, path: "/"},
+    { text: 'Encadernação', icon: <DataUsageIcon/>, path: "/encadernacao"}
 ];
 
-const secondaryListItems = [
-    { text: 'Settings', icon: <SettingsIcon /> }
+const secondaryListItems: MenuOption[] = [
+    { text: 'Settings', icon: <SettingsIcon/>, path: ""}
 ];
+
+type MenuOption = {
+    text: string;
+    icon: ReactNode;
+    path: string;
+}
 
 export default function MenuContent() {
     return (
@@ -23,7 +31,16 @@ export default function MenuContent() {
             <List dense>
                 {mainListItems.map((item, index) => (
                     <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton selected={index === 0}>
+                        <ListItemButton component={NavLink} to={item.path} sx={{
+                            '&.active': {
+                                bgcolor: 'primary.light',
+                                color: 'white',
+                                borderRadius: 1,
+                                '& .MuiListItemIcon-root': {
+                                    color: 'white',
+                                },
+                            }
+                        }}>
                             <ListItemIcon>{item.icon}</ListItemIcon>
                             <ListItemText primary={item.text} />
                         </ListItemButton>
@@ -33,7 +50,16 @@ export default function MenuContent() {
             <List dense>
                 {secondaryListItems.map((item, index) => (
                     <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton>
+                        <ListItemButton component={NavLink} to={item.path} sx={{
+                            '&.active': {
+                                bgcolor: 'primary.light',
+                                color: 'white',
+                                borderRadius: 1,
+                                '& .MuiListItemIcon-root': {
+                                    color: 'white',
+                                },
+                            }
+                        }}>
                             <ListItemIcon>{item.icon}</ListItemIcon>
                             <ListItemText primary={item.text} />
                         </ListItemButton>

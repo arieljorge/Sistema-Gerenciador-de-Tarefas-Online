@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import MenuContent from './MenuContent';
 import OptionsMenu from './OptionsMenu';
+import {useAuth} from "@hooks/useAuth.ts";
 
 const drawerWidth = 240;
 
@@ -22,6 +23,9 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
+    const {auth} = useAuth();
+    const user = auth?.user ?? null;
+
     return (
         <Drawer
             variant="permanent"
@@ -64,18 +68,12 @@ export default function SideMenu() {
                     borderColor: 'divider',
                 }}
             >
-                <Avatar
-                    sizes="small"
-                    alt="Riley Carter"
-                    src="/static/images/avatar/7.jpg"
-                    sx={{ width: 36, height: 36 }}
-                />
+                <Avatar sizes="small" sx={{ width: 36, height: 36 }}>
+                    {user?.name[0].toUpperCase() ?? "?"}
+                </Avatar>
                 <Box sx={{ mr: 'auto' }}>
                     <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-                        Riley Carter
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                        riley@email.com
+                        {user?.name ?? "----------"}
                     </Typography>
                 </Box>
                 <OptionsMenu />

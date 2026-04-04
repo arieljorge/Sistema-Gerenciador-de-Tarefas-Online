@@ -15,7 +15,7 @@ export function PrivateRoute({roles}: PrivateRouteProps) {
     }
 
     if (roles && !roles.some(hasRole)) {
-        return <Navigate to={"/dashboard"} replace/>
+        return <Navigate to={"/"} replace/>
     }
 
     return (
