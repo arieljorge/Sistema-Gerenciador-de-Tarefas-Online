@@ -14,7 +14,7 @@ export default function RemoveDialog({isOpen, onClose, handleRemove}: RemoveDial
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    O item de selecionado será deletado e não será possível defazer remoção, deseja proseguir ?
+                    O item de selecionado será deletado e não será possível desfazer remoção, deseja proseguir ?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

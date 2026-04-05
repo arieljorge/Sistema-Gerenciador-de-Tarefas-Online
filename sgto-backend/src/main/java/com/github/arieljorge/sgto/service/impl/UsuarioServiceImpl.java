@@ -3,6 +3,7 @@ package com.github.arieljorge.sgto.service.impl;
 import com.github.arieljorge.sgto.dto.UsuarioCreateDto;
 import com.github.arieljorge.sgto.dto.UsuarioLoginDto;
 import com.github.arieljorge.sgto.dto.UsuarioLoginOutDto;
+import com.github.arieljorge.sgto.dto.UsuarioSimpleDto;
 import com.github.arieljorge.sgto.entity.Role;
 import com.github.arieljorge.sgto.entity.Usuario;
 import com.github.arieljorge.sgto.entity.UsuariosRoles;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -87,5 +89,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         String token = this.jwtService.gerarToken(extraClaims, userDetails);
         return new UsuarioLoginOutDto(token);
+    }
+
+    @Override
+    public List<UsuarioSimpleDto> obterUsuarios() {
+        List<Usuario> usuarios = this.usuarioRepository.findAll();
+        if (usuarios == null) return new ArrayList<>();
+        return usuarios.stream().map(UsuarioSimpleDto::new).toList();
     }
 }

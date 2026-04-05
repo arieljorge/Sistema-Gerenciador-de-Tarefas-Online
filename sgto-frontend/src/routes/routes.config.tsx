@@ -11,13 +11,17 @@ export const publicRoutes: RouteConfig[] = [
     {
         path: "/login",
         component: lazy(() => import("@pages/Login"))
+    },
+    {
+        path: "/cadastro-usuario",
+        component: lazy(() => import("@pages/FormularioUsuario"))
     }
 ];
 
 export const privateRoutes: RouteConfig[] = [
     {
         path: "/",
-        component: lazy(() => import("@pages/Login"))
+        component: lazy(() => import("@pages/QuadroTarefas"))
     },
     {
         path: "/encadernacao",

@@ -19,6 +19,19 @@ class AuthService extends AxiosHttpClient {
             data
         } as AxiosRequestConfig)
     }
+
+    cadastrarUsuario(data: UsuarioCreate): Promise<ResponseAPI<void>> {
+        return this.post({
+            url: '/usuario',
+            data
+        } as AxiosRequestConfig)
+    }
+}
+
+export interface UsuarioCreate {
+    username: string;
+    email: string;
+    senha: string;
 }
 
 export const authService = new AuthService(AxiosPublicInstance);

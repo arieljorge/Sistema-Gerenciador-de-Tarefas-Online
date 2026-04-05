@@ -12,9 +12,7 @@ import {Fragment} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {authService, type LoginRequest, type LoginResponse} from "@services/auth.service.ts";
-import {useAuth} from "@hooks/useAuth.ts";
-import type {ResponseAPI} from "@/types/pagination.ts";
+import {authService, type UsuarioCreate} from "@services/auth.service.ts";
 import {useNavigate} from "react-router-dom";
 import {Link} from "react-router";
 
@@ -62,33 +60,34 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 
 const loginSchema = z.object({
     usuario: z.string(),
+    email: z.string(),
     senha: z.string()
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
 
-export default function Login() {
-    const {login} = useAuth();
+export default function FormularioUsuario() {
     const navigate = useNavigate();
 
     const {control, handleSubmit, formState: {errors, isSubmitting}} = useForm<LoginForm>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
             usuario: "",
+            email: "",
             senha: ""
         }
     });
 
     const onSubmit = async (data: LoginForm) => {
-        const loginRequest: LoginRequest = {
+        const usuario: UsuarioCreate = {
             username: data.usuario,
+            email: data.email,
             senha: data.senha
         }
 
         try {
-            const loginReponse: ResponseAPI<LoginResponse> = await authService.autenticar(loginRequest);
-            login(loginReponse.data.token, {username: data.usuario, senha: data.senha});
-            navigate('/');
+            await authService.cadastrarUsuario(usuario);
+            navigate('/login');
         } catch (err) {
             console.error(err);
         }
@@ -104,7 +103,7 @@ export default function Login() {
                         variant="h1"
                         sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2rem)' }}
                     >
-                        Tela de Acesso
+                        Cadastro de Usuário
                     </Typography>
                     <Box
                         component="form"
@@ -139,6 +138,25 @@ export default function Login() {
                             />
                         </FormControl>
                         <FormControl>
+                            <FormLabel htmlFor="email">Email</FormLabel>
+                            <Controller
+                                name={"email"}
+                                control={control}
+                                render={({ field }) => (
+                                    <TextField
+                                        {...field}
+                                        id={"email"}
+                                        type="email"
+                                        fullWidth
+                                        variant="outlined"
+                                        size={"small"}
+                                        error={!!errors.email}
+                                        helperText={errors.email?.message}
+                                    />
+                                )}
+                            />
+                        </FormControl>
+                        <FormControl>
                             <FormLabel htmlFor="senha">Senha</FormLabel>
                             <Controller
                                 name={"senha"}
@@ -157,7 +175,7 @@ export default function Login() {
                                 )}
                             />
                         </FormControl>
-                        <Link to={"/cadastro-usuario"}>cadastrar usuário</Link>
+                        <Link to={"/login"}>voltar para a tela de acesso</Link>
                         <Box marginTop={1}>
                             <Button
                                 type="submit"

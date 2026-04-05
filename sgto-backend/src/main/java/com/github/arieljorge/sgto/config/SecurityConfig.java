@@ -33,6 +33,7 @@ public class SecurityConfig {
                     auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/auth").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuario").permitAll()
                         .anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
