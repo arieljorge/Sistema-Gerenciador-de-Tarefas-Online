@@ -183,7 +183,7 @@ export default function FormularioUsuario() {
                                 variant="contained"
                                 disabled={isSubmitting}
                             >
-                                {isSubmitting ? "Entrando..." : "Entrar"}
+                                {isSubmitting ? "Cadastrando..." : "Cadastrar"}
                             </Button>
                         </Box>
                     </Box>
