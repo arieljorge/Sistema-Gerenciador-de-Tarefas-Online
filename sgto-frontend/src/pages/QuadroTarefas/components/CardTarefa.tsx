@@ -4,7 +4,7 @@ import {tarefaService, type TarefaSimple} from "@services/tarefa.service.ts";
 import {type SchemaEditTaskType, TarefaDialogEdit} from "@pages/QuadroTarefas/components/TarefaDialogEdit.tsx";
 import {useState} from "react";
 
-export default function CardTarefa({data, idQuadro, loadData}: {data: TarefaSimple, idQuadro: number, loadData: () => Promise<void>}) {
+export default function CardTarefa({data, loadData}: {data: TarefaSimple, loadData: () => Promise<void>}) {
     const [isDialogTarefaEditOpen, setIsDialogTarefaEditOpen] = useState<boolean>(false);
     const idTarefa = data.id;
 
@@ -18,7 +18,6 @@ export default function CardTarefa({data, idQuadro, loadData}: {data: TarefaSimp
         setIsDialogTarefaEditOpen(false);
         await tarefaService.atualizarTarefa({
             ...data,
-            idQuadro: idQuadro,
             id: idTarefa
         });
         await loadData();

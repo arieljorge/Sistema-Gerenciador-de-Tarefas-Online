@@ -94,7 +94,7 @@ export default function ListaTarefa({quadro, onRemove}: {quadro: Quadro, onRemov
                 overflowY: "auto"
             }}>
                 {tarefas.map((value, index) => (
-                    <CardTarefa key={index} data={value} idQuadro={quadro.id} loadData={loadData}/>
+                    <CardTarefa key={index} data={value} loadData={loadData}/>
                 ))}
             </Box>
             <Dialog open={isOpen} onClose={onClose} aria-label={"remove-dialog"}>

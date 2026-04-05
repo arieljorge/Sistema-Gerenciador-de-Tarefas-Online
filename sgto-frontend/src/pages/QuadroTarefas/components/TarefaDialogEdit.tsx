@@ -17,10 +17,12 @@ import { z } from "zod";
 import {tarefaService} from "@services/tarefa.service.ts";
 import Divider from "@mui/material/Divider";
 import {type SimpleUsuario, usuarioService} from "@services/usuario.service.ts";
+import {type Quadro, quadroService} from "@services/quadro.service.ts";
 
 const schema = z.object({
     titulo: z.string().min(1, "Título obrigatório"),
     descricao: z.string().optional(),
+    idQuadro: z.number(),
     prazo: z
         .string()
         .optional()
@@ -31,6 +33,7 @@ const schema = z.object({
 export interface SchemaEditTaskType {
     titulo: string;
     descricao?: string;
+    idQuadro: number;
     prazo?: string;
     usuarios?: string[];
 }
@@ -59,6 +62,7 @@ export function TarefaDialogEdit({open, idTarefa, onClose, onSubmit, onDelete}: 
 
     const [loading, setLoading] = useState(false);
     const [usuarios, setUsuarios] = useState<SimpleUsuario[]>([]);
+    const [quadros, setQuadros] = useState<Quadro[]>([]);
 
     useEffect(() => {
         if (!open || !idTarefa) return;
@@ -69,15 +73,18 @@ export function TarefaDialogEdit({open, idTarefa, onClose, onSubmit, onDelete}: 
 
                 const tarefa = await tarefaService.obterTarefa(idTarefa);
                 const usuarios = await usuarioService.obterUsuarios();
+                const quadros = await quadroService.obterQuadros();
 
                 reset({
                     titulo: tarefa.data.titulo,
                     descricao: tarefa.data.descricao ?? "",
+                    idQuadro: tarefa.data.idQuadro,
                     prazo: tarefa.data.prazo ?? undefined,
                     usuarios: tarefa.data.usuarios ?? []
                 });
 
                 setUsuarios(usuarios.data);
+                setQuadros(quadros.data);
             } finally {
                 setLoading(false);
             }
@@ -119,7 +126,33 @@ export function TarefaDialogEdit({open, idTarefa, onClose, onSubmit, onDelete}: 
                                 />
                             )}
                         />
-
+                        <Controller
+                            name="idQuadro"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    select
+                                    label="Mover Para"
+                                    value={field.value || []}
+                                    onChange={(e) => field.onChange(e.target.value)}
+                                    error={!!errors.idQuadro}
+                                    helperText={errors.idQuadro?.message}
+                                    fullWidth
+                                    slotProps={{
+                                        select: {
+                                            multiple: true
+                                        }
+                                    }}
+                                >
+                                    {quadros.map((quadro) => (
+                                        <MenuItem key={quadro.id} value={quadro.id}>
+                                            {quadro.nome}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            )}
+                        />
                         <Controller
                             name="prazo"
                             control={control}
