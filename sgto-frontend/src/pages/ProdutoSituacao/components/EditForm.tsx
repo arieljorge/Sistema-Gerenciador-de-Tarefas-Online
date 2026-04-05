@@ -12,8 +12,8 @@ import Button from "@mui/material/Button";
 import FormLabel from "@mui/material/FormLabel";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
-import {contribuicaoService} from "@services/contribuicao.service.ts";
 import {useEffect} from "react";
+import {produtoSituacaoService} from "@services/produto.situacao.service.ts";
 
 interface EditFormProps {
     isOpen: boolean;
@@ -43,7 +43,7 @@ export default function EditForm({isOpen, onClose, loadData, id}: EditFormProps)
 
     const saveForm = async (data: SchemaForm) => {
         if (id) {
-            await contribuicaoService.atualizarContribuicao({
+            await produtoSituacaoService.atualizarProdutoSituacao({
                 id: id,
                 nome: data.nome,
                 idExterno: data.idExterno ?? ""
@@ -60,7 +60,7 @@ export default function EditForm({isOpen, onClose, loadData, id}: EditFormProps)
 
     useEffect(() => {
         if (!id) return;
-        contribuicaoService.obterContribuicao(id).then(response => {
+        produtoSituacaoService.obterProdutoSituacao(id).then(response => {
             reset({
                 nome: response.data.nome,
                 idExterno: response.data.idExterno
