@@ -100,6 +100,7 @@ public class TarefaServiceImpl implements TarefaService {
         tarefa.setTitulo(tarefaEditDto.titulo());
         tarefa.setDescricao(tarefaEditDto.descricao());
         tarefa.setPrazo(Optional.ofNullable(tarefaEditDto.prazo()).map(LocalDate::atStartOfDay).orElse(null));
+        tarefa.setIdQuadro(tarefaEditDto.idQuadro());
 
         this.tarefaUsuariosRepository.deleteAllById_IdTarefa(tarefa.getId());
         final Tarefa tarefaEditada = this.tarefaRepository.save(tarefa);

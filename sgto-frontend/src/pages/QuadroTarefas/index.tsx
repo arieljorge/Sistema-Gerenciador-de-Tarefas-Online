@@ -82,7 +82,7 @@ export default function QuadroTarefas() {
                 overflowY: { xs: "auto", md: "hidden"},
             }}>
                 {quadros.map((value, index) => (
-                    <ListaTarefa key={index} quadro={value} onRemove={onRemoveList}/>
+                    <ListaTarefa key={index} quadro={value} onRemove={onRemoveList} reloadLista={loadData}/>
                 ))}
             </Stack>
             <Dialog open={isOpen} onClose={onClose}>

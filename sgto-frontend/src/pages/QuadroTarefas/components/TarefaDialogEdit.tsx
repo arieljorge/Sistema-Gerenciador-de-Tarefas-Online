@@ -134,16 +134,11 @@ export function TarefaDialogEdit({open, idTarefa, onClose, onSubmit, onDelete}: 
                                     {...field}
                                     select
                                     label="Mover Para"
-                                    value={field.value || []}
+                                    value={field.value || ""}
                                     onChange={(e) => field.onChange(e.target.value)}
                                     error={!!errors.idQuadro}
                                     helperText={errors.idQuadro?.message}
                                     fullWidth
-                                    slotProps={{
-                                        select: {
-                                            multiple: true
-                                        }
-                                    }}
                                 >
                                     {quadros.map((quadro) => (
                                         <MenuItem key={quadro.id} value={quadro.id}>

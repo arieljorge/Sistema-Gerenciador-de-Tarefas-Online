@@ -16,7 +16,7 @@ import {
     TarefaDialogCreate
 } from "@pages/QuadroTarefas/components/TarefaDialogCreate.tsx";
 
-export default function ListaTarefa({quadro, onRemove}: {quadro: Quadro, onRemove: (id: number) => Promise<void>}) {
+export default function ListaTarefa({quadro, onRemove, reloadLista}: {quadro: Quadro, onRemove: (id: number) => Promise<void>, reloadLista: () => Promise<void>}) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [tarefas, setTarefas] = useState<TarefaSimple[]>([]);
@@ -94,7 +94,7 @@ export default function ListaTarefa({quadro, onRemove}: {quadro: Quadro, onRemov
                 overflowY: "auto"
             }}>
                 {tarefas.map((value, index) => (
-                    <CardTarefa key={index} data={value} loadData={loadData}/>
+                    <CardTarefa key={index} data={value} loadData={reloadLista}/>
                 ))}
             </Box>
             <Dialog open={isOpen} onClose={onClose} aria-label={"remove-dialog"}>
